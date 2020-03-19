@@ -1,6 +1,6 @@
 {
   "name": "browser-basic-kit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simplify work flow for redux",
   "main": "build/index.js",
   "scripts": {
@@ -43,5 +43,8 @@
     "yarn.lock": [
       "git rm --cached"
     ]
+  },
+  "dependencies": {
+    "js-basic-kit": "^0.0.4"
   }
 }

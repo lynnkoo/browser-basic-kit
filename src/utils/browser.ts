@@ -1,3 +1,5 @@
+import { toArray } from 'js-basic-kit'
+
 export enum BrowserType {
     IE = 'IE',
     Edge = 'Edge',
@@ -46,7 +48,7 @@ return BrowserType.Unknow
 
 export function getBrowserVersion(browserType: BrowserType): string {
 const userAgent = navigator.userAgent
-const regexps = browserVersionMap[browserType]
+const regexps = toArray(browserVersionMap[browserType])
 for (const regexp of regexps) {
     const match = userAgent.match(regexp)
     if (match) {
