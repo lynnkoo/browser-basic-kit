@@ -1,6 +1,6 @@
 {
   "name": "browser-basic-kit",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A simplify work flow for redux",
   "main": "build/index.js",
   "scripts": {
