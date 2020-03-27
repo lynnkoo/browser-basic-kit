@@ -7,53 +7,69 @@ export enum BrowserType {
     Opera = 'Opera',
     Safari = 'Safari',
     Chrome = 'Chrome',
+    QQ = 'QQBrowser',
+    QQWebView = 'QQWebView',
+    WeChatWebView = 'WeChatWebView',
+    UC = 'UC',
+    Baidu = 'Baidu',
+    BaiduWebView = 'BaiduWebView',
     Unknow = 'Unknow',
-  }
+}
 
 type IbrowserTypeMap = {
-[key: string]: (ua: string) => boolean
+    [key: string]: () => boolean
 }
 
 type IbrowserVersionMap = {
-[key: string]: RegExp[]
+    [key: string]: RegExp[]
 }
 
+const ua = navigator.userAgent
+
 const browserTypeMap: IbrowserTypeMap = {
-[BrowserType.Opera]: (ua) => ua.includes('Opera'),
-[BrowserType.IE]: (ua) => ua.includes('MSIE') || ua.includes('Trident'),
-[BrowserType.Edge]: (ua) => ua.includes('Edge'),
-[BrowserType.Firefox]: (ua) => ua.includes('Firefox'),
-[BrowserType.Safari]: (ua) => ua.includes('Safari') && !ua.includes('Chrome'),
-[BrowserType.Chrome]: (ua) => ua.includes('Chrome') && ua.includes('Safari'),
+    [BrowserType.Opera]: () => ua.includes('Opera'),
+    [BrowserType.IE]: () => ua.includes('MSIE') || ua.includes('Trident'),
+    [BrowserType.Edge]: () => ua.includes('Edge'),
+    [BrowserType.Firefox]: () => ua.includes('Firefox'),
+    [BrowserType.Safari]: () => ua.includes('Safari') && !ua.includes('Chrome'),
+    [BrowserType.Chrome]: () => ua.includes('Chrome') && ua.includes('Safari'),
+    [BrowserType.WeChatWebView]: () => /micromessenger/i.test(ua.toLocaleLowerCase()),
+    [BrowserType.QQ]: () => /MQQBrowser/i.test(ua),
+    [BrowserType.QQWebView]: () => /\Wqq\W/i.test(ua),
+    [BrowserType.UC]: () => /UCBrowser/i.test(ua),
+    [BrowserType.Baidu]: () => /Baidu/i.test(ua),
+    [BrowserType.BaiduWebView]: () => /baiduboxapp/i.test(ua),
 }
 
 const browserVersionMap: IbrowserVersionMap = {
-[BrowserType.Opera]: [/Opera.([\d.]+)/],
-[BrowserType.IE]: [/MSIE ([\d.]+)/, /rv:([\d.]+)/],
-[BrowserType.Edge]: [/Edge\/([\d.]+)/],
-[BrowserType.Firefox]: [/Firefox\/([\d.]+)/],
-[BrowserType.Safari]: [/Version\/([\d.]+)/],
-[BrowserType.Chrome]: [/Chrome\/([\d.]+)/],
+    [BrowserType.Opera]: [/Opera.([\d.]+)/],
+    [BrowserType.IE]: [/MSIE ([\d.]+)/, /rv:([\d.]+)/],
+    [BrowserType.Edge]: [/Edge\/([\d.]+)/],
+    [BrowserType.Firefox]: [/Firefox\/([\d.]+)/],
+    [BrowserType.Safari]: [/Version\/([\d.]+)/],
+    [BrowserType.Chrome]: [/Chrome\/([\d.]+)/],
 }
 
-export function getBrowserType(): BrowserType {
-const userAgent = navigator.userAgent
-for (const browserType of Object.keys(browserTypeMap)) {
-    if (browserTypeMap[browserType](userAgent)) {
-    return browserType as BrowserType
+export const BROWSER_TYPE = getBrowserType()
+export const BROWSER_VERSION = getBrowserVersion()
+
+function getBrowserType(): BrowserType {
+    for (const browserType of Object.keys(browserTypeMap)) {
+        if (browserTypeMap[browserType]()) {
+            return browserType as BrowserType
+        }
     }
-}
-return BrowserType.Unknow
+    return BrowserType.Unknow
 }
 
-export function getBrowserVersion(browserType: BrowserType): string {
-const userAgent = navigator.userAgent
-const regexps = toArray(browserVersionMap[browserType])
-for (const regexp of regexps) {
-    const match = userAgent.match(regexp)
-    if (match) {
-    return match[1]
+function getBrowserVersion(): string {
+    const userAgent = navigator.userAgent
+    const regexps = toArray(browserVersionMap[BROWSER_TYPE])
+    for (const regexp of regexps) {
+        const match = userAgent.match(regexp)
+        if (match) {
+            return match[1]
+        }
     }
-}
-return '-1'
+    return '-1'
 }

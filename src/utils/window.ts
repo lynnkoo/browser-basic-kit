@@ -1,4 +1,4 @@
-import { IS_WINDOWS, IS_MOBILE } from './device'
+import { IS_WINDOWS } from './device'
 
 export function initInnerHeight(rootNode: HTMLElement | null) {
     if (!rootNode) {
